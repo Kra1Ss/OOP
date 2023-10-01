@@ -190,9 +190,6 @@ public:
 		file.close();
 	}
 
-	// Nuzhno chistit massiv, esli chitaem v nepustoi massiv
-	void clear() {}
-
 	// Rabotaet only so strokami, potomu chto std::stoi rabotaet tolko so strokami. Mozhno schitat stroki i stolbci vruchnuiu
 	void read_from_file(std::string filename) {
 		std::ifstream file(filename);
@@ -204,7 +201,7 @@ public:
 		file >> temp;
 		file_rows = std::stoi(temp);
 		if (file_rows > static_len) {
-		std::cout << "ERROR: Can't contain. Not enough rows\n";
+			std::cout << "ERROR: Can't contain. Not enough rows\n";
 			file.close();
 			return;
 		}
@@ -219,12 +216,13 @@ public:
 			return;
 		}
 		for (int row{ 1 }; row < file_rows; row++) {
-			static_array[row] = new item*[dyn_len + 1];
-			for (int col{}; col<dyn_len;col++)
+			if (static_array[row] == NULL)
+				static_array[row] = new item * [dyn_len + 1];
+			for (int col{}; col < dyn_len; col++)
 				static_array[row][col] = NULL;
 		}
 
-		for (int row{};row<file_rows;row++)
+		for (int row{}; row < file_rows; row++)
 			for (int col{}; col < file_cols; col++) {
 				file >> temp;
 				if (temp == "NULL")
